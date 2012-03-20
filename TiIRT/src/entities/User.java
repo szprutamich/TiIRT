@@ -8,9 +8,7 @@ package entities;
  *
  * @author maszter
  */
-public class User {
-    private int x;
-    private int y;
+public class User extends Object{
     
     public User(){
         
@@ -21,18 +19,22 @@ public class User {
         this.y = y;
     }
     
+    @Override
     public void setX(int x){
         this.x = x;
     }
     
+    @Override
     public void setY(int y){
         this.y = y;
     }
     
+    @Override
     public int getX(){
         return x;
     }
     
+    @Override
     public int getY(){
         return y;
     }

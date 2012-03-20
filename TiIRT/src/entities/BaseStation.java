@@ -8,10 +8,8 @@ package entities;
  *
  * @author maszter
  */
-public class BaseStation {
+public class BaseStation extends Object{
     private int d;
-    private int x;
-    private int y;
     private int M;
 
     public BaseStation(){
@@ -23,18 +21,22 @@ public class BaseStation {
         this.y = y;
     }
     
+    @Override
     public int getX() {
         return x;
     }
 
+    @Override
     public int getY() {
         return y;
     }
     
+    @Override
     public void setX(int x){
         this.x = x;
     }
     
+    @Override
     public void setY(int y){
         this.y = y;
     }
