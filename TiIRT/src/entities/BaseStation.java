@@ -21,6 +21,12 @@ public class BaseStation extends Object{
         this.y = y;
     }
     
+    public BaseStation(int x, int y, int d){
+        this.x = x;
+        this.y = y;
+        this.d = d;
+    }
+    
     @Override
     public int getX() {
         return x;
@@ -39,5 +45,13 @@ public class BaseStation extends Object{
     @Override
     public void setY(int y){
         this.y = y;
+    }
+
+    public int getD() {
+        return d;
+    }
+
+    public void setD(int d) {
+        this.d = d;
     }
 }
