@@ -9,16 +9,12 @@ package entities;
  * @author maszter
  */
 public class BaseStation extends Object{
-    private int d;
-    private int M;
+    private int d; //zasięg lub moc nadawania
+    private int N = 5; //zakłócenia (stała wartość)
+    private int P; //redukcja mocy
 
     public BaseStation(){
         
-    }
-    
-    public BaseStation(int x, int y){
-        this.x = x;
-        this.y = y;
     }
     
     public BaseStation(int x, int y, int d){
@@ -53,5 +49,9 @@ public class BaseStation extends Object{
 
     public void setD(int d) {
         this.d = d;
+    }
+    
+    public int getN() {
+        return N;
     }
 }

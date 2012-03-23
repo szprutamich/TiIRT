@@ -4,7 +4,6 @@ package controllers;
 import entities.BaseStation;
 import entities.User;
 import java.util.ArrayList;
-import java.util.Random;
 
 /*
  * To change this template, choose Tools | Templates
@@ -20,13 +19,19 @@ public class FakeController {
     ArrayList<BaseStation> stations = new ArrayList<BaseStation>();
     
     public void test(){
-        Random rand = new Random();
-        for(int i = 0; i< 30; i++){
-            users.add(new User(rand.nextInt(100), rand.nextInt(100)));
-        }
-        for(int i = 0; i< 10; i++){
-            stations.add(new BaseStation(rand.nextInt(100), rand.nextInt(100), rand.nextInt(40)+20));
-        }
+        users.add(new User(20, 50));
+        users.add(new User(40, 80));
+        users.add(new User(70, 30));
+        users.add(new User(20, 20));
+        users.add(new User(10, 60));
+        users.add(new User(30, 80));
+        users.add(new User(70, 40));
+        users.add(new User(90, 10));
+        users.add(new User(70, 70));
+        stations.add(new BaseStation(30, 25, 30));
+        stations.add(new BaseStation(20, 80, 30));
+        stations.add(new BaseStation(84, 37, 30));
+        stations.add(new BaseStation(80, 75, 30));
     }
 
     public ArrayList<BaseStation> getStations() {
@@ -43,5 +48,28 @@ public class FakeController {
 
     public void setUsers(ArrayList<User> users) {
         this.users = users;
+    }
+    
+    public int computeSINR(User u, BaseStation b){
+        double PL = u.computeDistance(b);
+        double P = b.getD()/PL;
+        P = P >= 1 ? P*50 : 0;
+        int I = 0;
+        for(BaseStation s : getStations()){
+            if(s.equals(b)){
+                continue;
+            }
+            I += s.getD()/u.computeDistance(s);
+        }
+        return (int) (P / (I + b.getN()));
+    }
+    
+    public void testSINR(){
+        for(User u : getUsers()){
+            for(BaseStation s : getStations()){
+                System.out.print(computeSINR(u, s) + " ");
+            }
+            System.out.println("");
+        }
     }
 }

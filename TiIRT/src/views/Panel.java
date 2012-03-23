@@ -29,7 +29,7 @@ public class Panel extends JPanel{
 //            g.drawLine(0, (i+1)*height/side, width, (i+1)*height/side);
 //            g.drawLine((i+1)*width/side, 0, (i+1)*width/side, height);
 //        }
-        test(g);
+        test(g);        
     }
     
     public void drawObject(Object o, Color c, Graphics g){
@@ -40,13 +40,14 @@ public class Panel extends JPanel{
     public void drawRange(BaseStation b, Color c, Graphics g){
         g.setColor(c);
         int range = b.getD()*width/side;
-        g.drawOval(b.getX()*width/side-range/2, b.getY()*height/side-range/2, range, range);
+        g.drawOval(b.getX()*width/side-range, b.getY()*height/side-range, range*2, range*2);
     }
     
     // for Test
     public void test(Graphics g){
         FakeController test = new FakeController();
         test.test();
+        test.testSINR();
         for(Object s : test.getStations()){
             drawObject(s, Color.BLUE, g);
             drawRange((BaseStation)s, Color.BLUE, g);
