@@ -8,7 +8,7 @@ import entities.Object;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
-import controllers.FakeController;
+import controllers.Controller;
 import entities.BaseStation;
 
 /**
@@ -45,9 +45,9 @@ public class Panel extends JPanel{
     
     // for Test
     public void test(Graphics g){
-        FakeController test = new FakeController();
+        Controller test = new Controller();
         test.test();
-        test.testSINR();
+        test.createMatrix();
         for(Object s : test.getStations()){
             drawObject(s, Color.BLUE, g);
             drawRange((BaseStation)s, Color.BLUE, g);
