@@ -4,7 +4,6 @@ import entities.BaseStation;
 import entities.User;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 /*
  * To change this template, choose Tools | Templates
@@ -74,7 +73,7 @@ public class Controller {
             }
             System.out.println("");
         }
-        for(int i = 0; i < mat.length; i++){
+        for (int i = 0; i < mat.length; i++) {
             System.out.print("---");
         }
         System.out.println("");
@@ -91,7 +90,7 @@ public class Controller {
         for (int i = 0; i < max; i++) {
             for (int j = 0; j < max; j++) {
                 int val = computeSINR(users.get(i % rows), stations.get(j % cols));
-                if(i < rows && j < cols){
+                if (i < rows && j < cols) {
                     matrix[i][j] = val;
                 }
                 copyMatrix[i][j] = val;
@@ -101,22 +100,29 @@ public class Controller {
         //algorithm
         drawMatrix(matrix);
         drawMatrix(copyMatrix);
+        System.out.println("step1");
         step1();
         drawMatrix(copyMatrix);
+        System.out.println("step2");
         step2();
         drawMatrix(copyMatrix);
+        System.out.println("step3");
         step3();
         drawMatrix(copyMatrix);
-        while(coveredCols.size()+coveredRows.size() != matrix.length){        
-            step4();
+        while (coveredCols.size() + coveredRows.size() != matrix.length) {
+            System.out.println(coveredCols.size() + coveredRows.size());
+            System.out.println("step4");
+            step4();            
             drawMatrix(copyMatrix);
+            System.out.println("step5");
             step5();
             drawMatrix(copyMatrix);
+            System.out.println("step6");
             step6();
             drawMatrix(copyMatrix);
-        }       
-        step7();
-        System.out.println("");
+        }
+        System.out.println("step7");
+        ArrayList<int[]> list = step7();
     }
 
     private int findMinInRow(int num) {
@@ -150,30 +156,30 @@ public class Controller {
         }
         return min;
     }
-    
-    private boolean allZerosAreCovered(){
-        for(int i = 0; i < copyMatrix.length; i++){
-            for(int j = 0; j < copyMatrix.length; j++){
-                if(copyMatrix[i][j] == 0 && !coveredRows.contains(i) && !coveredCols.contains(j)){
+
+    private boolean allZerosAreCovered() {
+        for (int i = 0; i < copyMatrix.length; i++) {
+            for (int j = 0; j < copyMatrix.length; j++) {
+                if (copyMatrix[i][j] == 0 && !coveredRows.contains(i) && !coveredCols.contains(j)) {
                     return false;
                 }
             }
         }
         return true;
     }
-    
-    private int minNotCoveredValue(){
+
+    private int minNotCoveredValue() {
         int min = Integer.MAX_VALUE;
-        for(int i = 0; i < copyMatrix.length; i++){
-            for(int j = 0; j < copyMatrix.length; j++){
-                if(copyMatrix[i][j] < min && !coveredRows.contains(i) && !coveredCols.contains(j)){
+        for (int i = 0; i < copyMatrix.length; i++) {
+            for (int j = 0; j < copyMatrix.length; j++) {
+                if (copyMatrix[i][j] < min && !coveredRows.contains(i) && !coveredCols.contains(j)) {
                     min = copyMatrix[i][j];
                 }
             }
         }
         return min;
     }
-    
+
     //remove min in rows
     private void step1() {
         for (int i = 0; i < copyMatrix.length; i++) {
@@ -194,10 +200,11 @@ public class Controller {
         }
     }
 
-    private void step3(){
+    private void step3() {
+        //TODO: fix me
         HashMap<Integer, Integer> mapOfZerosInCol = new HashMap<Integer, Integer>();
         HashMap<Integer, Integer> mapOfZerosInRow = new HashMap<Integer, Integer>();
-        
+
         for (int i = 0; i < copyMatrix.length; i++) {
             int count = 0;
             for (int j = 0; j < copyMatrix.length; j++) {
@@ -221,46 +228,68 @@ public class Controller {
             int maxC = -1;
             int r = -1;
             int c = -1;
-            for(int i = 0; i < mapOfZerosInRow.size(); i++){
+            for (int i = 0; i < mapOfZerosInRow.size(); i++) {
                 int temp = mapOfZerosInRow.get(i);
-                if(temp > maxR){
+                if (temp > maxR) {
                     maxR = temp;
                     r = i;
                 }
             }
-            for(int i = 0; i < mapOfZerosInCol.size(); i++){
+            for (int i = 0; i < mapOfZerosInCol.size(); i++) {
                 int temp = mapOfZerosInCol.get(i);
-                if(temp > maxC){
+                if (temp > maxC) {
                     maxC = temp;
                     c = i;
                 }
             }
-            if(maxR > maxC && !coveredRows.contains(r)){
+            if (maxR > maxC && !coveredRows.contains(r)) {
                 coveredRows.add(r);
                 mapOfZerosInRow.put(r, -1);
-            }
-            else if(maxR <= maxC && !coveredCols.contains(c)){
+            } 
+            else if (maxR < maxC && !coveredCols.contains(c)) {
                 coveredCols.add(c);
                 mapOfZerosInCol.put(c, -1);
             }
+            else if (maxR == maxC){
+                int countR = 0;
+                int countC = 0;
+                for (int i = 0; i < copyMatrix.length; i++){                    
+                    if(copyMatrix[r][i] == 0 && !coveredCols.contains(i)){
+                        countR++;                        
+                    }                    
+                }
+                for (int i = 0; i < copyMatrix.length; i++){ 
+                    if(copyMatrix[i][c] == 0 && !coveredRows.contains(i)){
+                        countC++;
+                    }                    
+                }
+                if(countR > countC){
+                    coveredRows.add(r);
+                    mapOfZerosInRow.put(r, -1);
+                }
+                else{
+                    coveredCols.add(c);
+                    mapOfZerosInCol.put(c, -1);
+                }
+            }
         }
     }
-    
-    private void step4(){
+
+    private void step4() {
         int val = minNotCoveredValue();
-        for(int i = 0; i < copyMatrix.length; i++){
-            for(int j = 0; j < copyMatrix.length; j++){
-                if(coveredCols.contains(j)){
+        for (int i = 0; i < copyMatrix.length; i++) {
+            for (int j = 0; j < copyMatrix.length; j++) {
+                if (coveredCols.contains(j)) {
                     copyMatrix[i][j] += val;
                 }
-                if(coveredRows.contains(i)){
+                if (coveredRows.contains(i)) {
                     copyMatrix[i][j] += val;
                 }
             }
         }
     }
-    
-    private void step5(){
+
+    private void step5() {
         int min_val = findMinInMatrix();
         for (int i = 0; i < copyMatrix.length; i++) {
             for (int j = 0; j < copyMatrix.length; j++) {
@@ -268,28 +297,25 @@ public class Controller {
             }
         }
     }
-    
-    private void step6(){
+
+    private void step6() {
         coveredRows = new ArrayList<Integer>();
         coveredCols = new ArrayList<Integer>();
         step3();
-    }    
-    
+    }
+
     // choose 0s
     private ArrayList<int[]> step7() {
         ArrayList<int[]> list = new ArrayList<int[]>();
         boolean[] colCovered = new boolean[copyMatrix.length];
         boolean[] rowCovered = new boolean[copyMatrix.length];
 
-        ArrayList<int[]> pkts = new ArrayList<int[]>();
-                
         for (int i = 0; i < copyMatrix.length; i++) {
             colCovered[i] = false;
-            rowCovered[i] = false; 
+            rowCovered[i] = false;
         }
         // search all single 0 in columns and rows and mark it as covered
         do {
-            boolean added = false;            
             for (int i = 0; i < copyMatrix.length; i++) {
                 int count = 0;
                 int j;
@@ -306,7 +332,6 @@ public class Controller {
                     rowCovered[pkt[0]] = true;
                     colCovered[pkt[1]] = true;
                     list.add(pkt);
-                    added = true;
                 }
             }
             for (int i = 0; i < copyMatrix.length; i++) {
@@ -325,31 +350,12 @@ public class Controller {
                     colCovered[pkt[1]] = true;
                     rowCovered[pkt[0]] = true;
                     list.add(pkt);
-                    added = true;
                 }
             }
-            //cannot find single 0 in column or row so random one
-            if(!added){
-                Random rand = new Random();
-                int val;
-                int r;
-                int c;
-                do{
-                    int len = copyMatrix.length;
-                    r = rand.nextInt(len);
-                    c = rand.nextInt(len);
-                    val = copyMatrix[r][c];
-                }
-                while(val!=0);
-                int[] pkt = new int[2];
-                pkt[0] = r;
-                pkt[1] = c;
-                colCovered[c] = true;
-                rowCovered[r] = true;
-                list.add(pkt);
-            }
-        }
-        while(list.size() != copyMatrix.length);
+            //cannot find single 0 in column or row
+            //TODO:
+            
+        } while (list.size() != copyMatrix.length);
         return list;
-    }   
+    }
 }
