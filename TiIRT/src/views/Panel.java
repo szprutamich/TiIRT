@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import controllers.Controller;
+import downloaded.MainController;
 import entities.BaseStation;
 
 /**
@@ -45,7 +46,7 @@ public class Panel extends JPanel{
     
     // for Test
     public void test(Graphics g){
-        Controller test = new Controller();
+        MainController test = new MainController();
         test.test();
         test.createMatrix();
         for(Object s : test.getStations()){
