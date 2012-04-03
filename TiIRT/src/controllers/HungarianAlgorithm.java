@@ -1,80 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package downloaded;
-
-/*
- * Created on Apr 25, 2005
- * 
- * Munkres-Kuhn (Hungarian) Algorithm Clean Version: 0.11
- * 
- * Konstantinos A. Nedas                     
- * Department of Spatial Information Science & Engineering
- * University of Maine, Orono, ME 04469-5711, USA
- * kostas@spatial.maine.edu
- * http://www.spatial.maine.edu/~kostas       
- *
- * This Java class implements the Hungarian algorithm [a.k.a Munkres' algorithm,
- * a.k.a. Kuhn algorithm, a.k.a. Assignment problem, a.k.a. Marriage problem,
- * a.k.a. Maximum Weighted Maximum Cardinality Bipartite Matching].
- *
- * [It can be used as a method call from within any main (or other function).]
- * It takes 2 arguments:
- * a. A 2-D array (could be rectangular or square).
- * b. A string ("min" or "max") specifying whether you want the min or max assignment.
- * [It returns an assignment matrix[array.length][2] that contains the row and col of
- * the elements (in the original inputted array) that make up the optimum assignment.]
- *  
- * [This version contains only scarce comments. If you want to understand the 
- * inner workings of the algorithm, get the tutorial version of the algorithm
- * from the same website you got this one (http://www.spatial.maine.edu/~kostas/dev/soft/munkres.htm)]
- * 
- * Any comments, corrections, or additions would be much appreciated. 
- * Credit due to professor Bob Pilgrim for providing an online copy of the
- * pseudocode for this algorithm (http://216.249.163.93/bob.pilgrim/445/munkres.html)
- * 
- * Feel free to redistribute this source code, as long as this header--with
- * the exception of sections in brackets--remains as part of the file.
- * 
- * Requirements: JDK 1.5.0_01 or better.
- * [Created in Eclipse 3.1M6 (www.eclipse.org).]
- * 
- */
-import static java.lang.Math.*;
+package controllers;
 
 public class HungarianAlgorithm {
 
-    //********************************//
-    //METHODS FOR CONSOLE INPUT-OUTPUT//
-    //********************************//
-
-    public static void printTime(double time) //Formats time output.
-    {
-        String timeElapsed = "";
-        int days = (int) floor(time) / (24 * 3600);
-        int hours = (int) floor(time % (24 * 3600)) / (3600);
-        int minutes = (int) floor((time % 3600) / 60);
-        int seconds = (int) round(time % 60);
-
-        if (days > 0) {
-            timeElapsed = Integer.toString(days) + "d:";
-        }
-        if (hours > 0) {
-            timeElapsed = timeElapsed + Integer.toString(hours) + "h:";
-        }
-        if (minutes > 0) {
-            timeElapsed = timeElapsed + Integer.toString(minutes) + "m:";
-        }
-
-        timeElapsed = timeElapsed + Integer.toString(seconds) + "s";
-        System.out.print("\nTotal time required: " + timeElapsed + "\n\n");
-    }
-
-    //*******************************************//
-    //METHODS THAT PERFORM ARRAY-PROCESSING TASKS//
-    //*******************************************//
-    
     public static double findLargest //Finds the largest element in a positive array.
             (double[][] array) //works for arrays where all values are >= 0.
     {
@@ -86,19 +13,7 @@ public class HungarianAlgorithm {
                 }
             }
         }
-
         return largest;
-    }
-
-    public static double[][] transpose //Transposes a double[][] array.
-            (double[][] array) {
-        double[][] transposedArray = new double[array[0].length][array.length];
-        for (int i = 0; i < transposedArray.length; i++) {
-            for (int j = 0; j < transposedArray[i].length; j++) {
-                transposedArray[i][j] = array[j][i];
-            }
-        }
-        return transposedArray;
     }
 
     public static double[][] copyOf //Copies all elements of an array to a new array.
@@ -108,13 +23,9 @@ public class HungarianAlgorithm {
             //Need to do it this way, otherwise it copies only memory location
             System.arraycopy(original[i], 0, copy[i], 0, original[i].length);
         }
-
         return copy;
     }
 
-    //**********************************//
-    //METHODS OF THE HUNGARIAN ALGORITHM//
-    //**********************************//
     public static int[][] hgAlgorithm(double[][] array, String sumType) {
         double[][] cost = copyOf(array);	//Create the cost matrix
 
@@ -447,53 +358,29 @@ public class HungarianAlgorithm {
         return minval;
     }
 
-    //***********//
-    //MAIN METHOD//
-    //***********//
-    public static void main(String[] args) {
+    public void start(double[][] matrix, MainController controller) {
         String sumType = "max";
 
-        MainController mC = new MainController();
-        mC.test();
-        mC.createMatrix();
-
-        double[][] matrix = mC.getMatrix();
-        double[][] array = matrix;
-
-        if (array.length > array[0].length) {
-            System.out.println("Array transposed (because rows>columns).\n");	//Cols must be >= Rows.
-            array = transpose(array);
-        }
-
-        //<COMMENT> TO AVOID PRINTING THE MATRIX FOR WHICH THE ASSIGNMENT IS CALCULATED
-        System.out.println("\n(Printing out only 2 decimals)\n");
         System.out.println("The matrix is:");
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                System.out.printf("%.2f\t", array[i][j]);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.printf("%4.0f", matrix[i][j]);
             }
             System.out.println();
         }
         System.out.println();
-        //</COMMENT>*/
 
-        double startTime = System.nanoTime();
-        int[][] assignment = new int[array.length][2];
-        assignment = hgAlgorithm(array, sumType);	//Call Hungarian algorithm.
-        double endTime = System.nanoTime();
+        int[][] assignment = new int[matrix.length][2];
+        assignment = hgAlgorithm(matrix, sumType);
 
-        System.out.println("The winning assignment (" + sumType + " sum) is:\n");
-        double sum = 0;
         for (int i = 0; i < assignment.length; i++) {
-            //<COMMENT> to avoid printing the elements that make up the assignment
-            System.out.printf("array(%d,%d) = %.2f\n", (assignment[i][0] + 1), (assignment[i][1] + 1),
-                    array[assignment[i][0]][assignment[i][1]]);
-            sum = sum + array[assignment[i][0]][assignment[i][1]];
-            //</COMMENT>
+            if (matrix[assignment[i][0]][assignment[i][1]] > 0) {
+                int u = assignment[i][0];
+                int bs = controller.getNumberOfStation(assignment[i][1]);
+                controller.getUserStations().put(u, bs);
+                System.out.printf("user %d connected to %d station using %d resource\n", u, bs,
+                        (assignment[i][1]));
+            }
         }
-
-        System.out.printf("\nThe %s is: %.2f\n", sumType, sum);
-        printTime((endTime - startTime) / 1000000000.0);
-
     }
 }

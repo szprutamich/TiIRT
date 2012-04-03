@@ -11,16 +11,21 @@ package entities;
 public class BaseStation extends Object{
     private int d; //zasięg lub moc nadawania
     private int N = 5; //zakłócenia (stała wartość)
-    private int P; //redukcja mocy
+    private int resources;
 
     public BaseStation(){
         
     }
     
-    public BaseStation(int x, int y, int d){
+    public BaseStation(int x, int y, int d, int resources){
         this.x = x;
         this.y = y;
         this.d = d;
+        this.resources = resources;
+    }
+
+    public int getResources() {
+        return resources;
     }
     
     @Override

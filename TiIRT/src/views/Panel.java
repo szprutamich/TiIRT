@@ -8,53 +8,86 @@ import entities.Object;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
-import controllers.Controller;
-import downloaded.MainController;
+import controllers.MainController;
 import entities.BaseStation;
+import entities.User;
+import java.util.HashMap;
 
 /**
  *
  * @author maszter
  */
-public class Panel extends JPanel{
+public class Panel extends JPanel {
+
     int side = 100;
     int height = 500;
     int width = 500;
-    
+    private MainController controller;
+    private boolean drawConnections = false;
+
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.GRAY);
         g.drawRect(0, 0, width, height);
-//        for(int i = 0; i < side; i++){            
-//            g.drawLine(0, (i+1)*height/side, width, (i+1)*height/side);
-//            g.drawLine((i+1)*width/side, 0, (i+1)*width/side, height);
-//        }
-        test(g);        
-    }
-    
-    public void drawObject(Object o, Color c, Graphics g){
-        g.setColor(c);
-        g.fillRect(o.getX()*width/side, o.getY()*height/side, width/side, height/side);
-    }
-    
-    public void drawRange(BaseStation b, Color c, Graphics g){
-        g.setColor(c);
-        int range = b.getD()*width/side;
-        g.drawOval(b.getX()*width/side-range, b.getY()*height/side-range, range*2, range*2);
-    }
-    
-    // for Test
-    public void test(Graphics g){
-        MainController test = new MainController();
-        test.test();
-        test.createMatrix();
-        for(Object s : test.getStations()){
-            drawObject(s, Color.BLUE, g);
-            drawRange((BaseStation)s, Color.BLUE, g);
+        if(controller != null){
+            drawObjects(controller, g);
         }
-        for(Object u : test.getUsers()){
+        if(drawConnections){
+            drawConnections(controller, g);
+        }
+    }
+
+    private void drawObject(Object o, Color c, Graphics g) {
+        g.setColor(c);
+        g.fillRect(o.getX() * width / side, o.getY() * height / side, width / side, height / side);
+    }
+
+    private void drawRange(BaseStation b, Color c, Graphics g) {
+        g.setColor(c);
+        int range = b.getD() * width / side;
+        g.drawOval(b.getX() * width / side - range, b.getY() * height / side - range, range * 2, range * 2);
+    }
+
+    private void drawObjects(MainController controller, Graphics g) {
+        drawGrid(g, false);
+        for (Object s : controller.getStations()) {
+            drawObject(s, Color.BLUE, g);
+            drawRange((BaseStation) s, Color.BLUE, g);
+        }
+        for (Object u : controller.getUsers()) {
             drawObject(u, Color.YELLOW, g);
+        }
+    }
+
+    private void drawGrid(Graphics g, boolean draw) {
+        if (draw) {
+            for (int i = 0; i < side; i++) {
+                g.drawLine(0, (i + 1) * height / side, width, (i + 1) * height / side);
+                g.drawLine((i + 1) * width / side, 0, (i + 1) * width / side, height);
+            }
+        }
+    }
+    
+    private void drawConnection(Graphics g, BaseStation bs, User u, Color c){
+        g.setColor(c);
+        g.drawLine(bs.getX() * width / side, bs.getY() * height / side, u.getX() * width / side, u.getY() * height / side);
+    }
+    
+    public void setMainController(MainController controller){
+        this.controller = controller;
+    }
+    
+    public void setDrawConnections(boolean b){
+        drawConnections = b;
+    }
+
+    private void drawConnections(MainController controller, Graphics g) {
+        HashMap<Integer, Integer> map = controller.getUserStations();
+        for(int i = 0; i< controller.getUsers().size(); i++){
+            Integer val = map.get(i);
+            if(val != null)
+                drawConnection(g, controller.getStations().get(map.get(i)), controller.getUsers().get(i), Color.red);
         }
     }
 }

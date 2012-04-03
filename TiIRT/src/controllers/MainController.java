@@ -1,8 +1,9 @@
-package downloaded;
+package controllers;
 
 import entities.BaseStation;
 import entities.User;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * To change this template, choose Tools | Templates
@@ -14,15 +15,26 @@ import java.util.ArrayList;
  */
 public class MainController {
 
-    double[][] copyMatrix;
+    //double[][] copyMatrix;
     double[][] matrix;
     int countLines;
     ArrayList<Integer> coveredRows = new ArrayList<Integer>();
     ArrayList<Integer> coveredCols = new ArrayList<Integer>();
     ArrayList<User> users = new ArrayList<User>();
     ArrayList<BaseStation> stations = new ArrayList<BaseStation>();
+    HungarianAlgorithm algorithm;
+    HashMap<Integer, Integer> userStations;
+    
+    public MainController(HungarianAlgorithm algorithm){
+        userStations = new HashMap<Integer, Integer>();
+        this.algorithm = algorithm;
+    }
 
-    public void test() {
+    public HashMap<Integer, Integer> getUserStations() {
+        return userStations;
+    }
+    
+    public void createObjects() {
         users.add(new User(20, 50));
         users.add(new User(40, 40));
         users.add(new User(35, 25));
@@ -30,11 +42,17 @@ public class MainController {
         users.add(new User(35, 30));
         users.add(new User(40, 35));
         users.add(new User(45, 25));
-        stations.add(new BaseStation(30, 25, 30));
-        stations.add(new BaseStation(25, 30, 30));
-        stations.add(new BaseStation(20, 40, 30));
-        stations.add(new BaseStation(50, 60, 30));
-        //stations.add(new BaseStation(90, 80, 30));
+        users.add(new User(80, 40));
+        users.add(new User(70, 25));
+        users.add(new User(60, 30));
+        users.add(new User(70, 30));
+        users.add(new User(60, 70));
+        users.add(new User(45, 25));
+        stations.add(new BaseStation(30, 25, 12, 4));
+        stations.add(new BaseStation(20, 40, 25, 5));
+        stations.add(new BaseStation(43, 60, 17, 8));
+        stations.add(new BaseStation(50, 30, 22, 5));
+        stations.add(new BaseStation(75, 80, 20, 7));
     }
 
     public ArrayList<BaseStation> getStations() {
@@ -67,10 +85,10 @@ public class MainController {
         return (int) (P / (I + b.getN()));
     }
 
-    public void drawMatrix(int[][] mat) {
+    public void drawMatrix(double[][] mat) {
         for (int i = 0; i < mat.length; i++) {
             for (int j = 0; j < mat[0].length; j++) {
-                System.out.printf("%3d", mat[i][j]);
+                System.out.printf("%3.0f", mat[i][j]);
             }
             System.out.println("");
         }
@@ -82,28 +100,47 @@ public class MainController {
 
     public void createMatrix() {
         int rows = users.size();
-        int cols = stations.size();
-        int max = cols > rows ? cols : rows;
-
+        int cols = countColums();
         matrix = new double[rows][cols];
-        copyMatrix = new double[max][max];
-
-        for (int i = 0; i < max; i++) {
-            for (int j = 0; j < max; j++) {
-                int val = computeSINR(users.get(i % rows), stations.get(j % cols));
-                if (i < rows && j < cols) {
+        for (int i = 0; i < rows; i++) {
+            int count = 0;
+            for (int j = 0; j < cols;) {
+                BaseStation bs = stations.get(count);
+                int res = bs.getResources();
+                while (res > 0){
+                    int val = computeSINR(users.get(i % rows), bs);
                     matrix[i][j] = val;
+                    res--;
+                    j++;                    
                 }
-                copyMatrix[i][j] = val;
+                count++;
             }
-        }        
-    }
-    
-    public double[][] getCopyMatrix(){
-        return copyMatrix;
+        }
     }
     
     public double[][] getMatrix(){
         return matrix;
     }
+    
+    private int countColums(){
+        ArrayList<BaseStation> list = getStations();
+        int count = 0;
+        for(BaseStation bs : list){
+            count += bs.getResources();
+        }
+        return count;
+    }
+    
+    public void start(){
+        algorithm.start(matrix, this);
+    }
+    
+    public int getNumberOfStation(int resourceNumber){
+        int result;
+        for(result = 0; result < stations.size() && resourceNumber >= 0; ++result){
+            int res = stations.get(result).getResources();
+            resourceNumber -= res;
+        }
+        return result-1;
+    }    
 }
