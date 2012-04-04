@@ -4,6 +4,7 @@ import entities.BaseStation;
 import entities.User;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /*
  * To change this template, choose Tools | Templates
@@ -41,21 +42,18 @@ public class MainController {
          stations.add(new BaseStation(X, Y, Range, Res));
      }
      
-    public void createObjects() {
+      public void createUsers() {
+         Random r = new Random();  
+        for(int i=0;i<20;i++){
+             users.add(new User(r.nextInt(100), r.nextInt(100)));
+        }
+
+    }
+      
+      
+    public void createBaseStations() {
         
-        users.add(new User(20, 50));
-        users.add(new User(40, 40));
-        users.add(new User(35, 25));
-        users.add(new User(40, 30));
-        users.add(new User(35, 30));
-        users.add(new User(40, 35));
         
-        users.add(new User(80, 40));
-        users.add(new User(70, 25));
-        users.add(new User(60, 30));
-        users.add(new User(70, 30));
-        users.add(new User(60, 70));
-        users.add(new User(45, 25));
         stations.add(new BaseStation(-100, -100, 0, 100));
         stations.add(new BaseStation(30, 25, 12, 4));
         stations.add(new BaseStation(20, 40, 25, 5));
