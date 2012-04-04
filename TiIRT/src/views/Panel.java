@@ -12,6 +12,7 @@ import controllers.MainController;
 import entities.BaseStation;
 import entities.User;
 import java.util.HashMap;
+import org.w3c.dom.css.RGBColor;
 
 /**
  *
@@ -24,6 +25,7 @@ public class Panel extends JPanel {
     int width = 500;
     private MainController controller;
     private boolean drawConnections = false;
+    private boolean grid = false;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -47,31 +49,43 @@ public class Panel extends JPanel {
         g.setColor(c);
         int range = b.getD() * width / side;
         g.drawOval(b.getX() * width / side - range, b.getY() * height / side - range, range * 2, range * 2);
+        g.drawString(String.valueOf(b.getResources()), b.getX()* width / side, b.getY()* height / side+20);
     }
 
     private void drawObjects(MainController controller, Graphics g) {
-        drawGrid(g, false);
+        drawGrid(g, grid);
         for (Object s : controller.getStations()) {
-            drawObject(s, Color.BLUE, g);
-            drawRange((BaseStation) s, Color.BLUE, g);
+            drawObject(s, new Color(70, 128, 224), g);
+            drawRange((BaseStation) s, new Color(70, 128, 224), g);
+            
         }
         for (Object u : controller.getUsers()) {
-            drawObject(u, Color.YELLOW, g);
+            drawObject(u,new Color(0, 0, 0), g);
         }
     }
 
     private void drawGrid(Graphics g, boolean draw) {
         if (draw) {
-            for (int i = 0; i < side; i++) {
-                g.drawLine(0, (i + 1) * height / side, width, (i + 1) * height / side);
-                g.drawLine((i + 1) * width / side, 0, (i + 1) * width / side, height);
+            for (int i = 0; i < side; i=i+10) {
+                g.drawLine(0, (i + 10) * height / side, width, (i + 10) * height / side);
+                g.drawLine((i + 10) * width / side, 0, (i + 10) * width / side, height);
             }
         }
+        
+    }
+     public void setDrawGrid() {
+        
+         if(grid)
+             grid=false;
+         else
+             grid=true;
+        
+        
     }
     
     private void drawConnection(Graphics g, BaseStation bs, User u, Color c){
         g.setColor(c);
-        g.drawLine(bs.getX() * width / side, bs.getY() * height / side, u.getX() * width / side, u.getY() * height / side);
+        g.drawLine(bs.getX() * width / side +2, bs.getY() * height / side +2, u.getX() * width / side +2, u.getY() * height / side +2);
     }
     
     public void setMainController(MainController controller){
@@ -87,7 +101,7 @@ public class Panel extends JPanel {
         for(int i = 0; i< controller.getUsers().size(); i++){
             Integer val = map.get(i);
             if(val != null)
-                drawConnection(g, controller.getStations().get(map.get(i)), controller.getUsers().get(i), Color.red);
+                drawConnection(g, controller.getStations().get(map.get(i)), controller.getUsers().get(i), new Color(235, 92, 92));
         }
     }
 }
