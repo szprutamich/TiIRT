@@ -16,7 +16,6 @@ import java.util.Random;
  */
 public class MainController {
 
-    //double[][] copyMatrix;
     double[][] matrix;
     int countLines;
     ArrayList<Integer> coveredRows = new ArrayList<Integer>();
@@ -25,8 +24,9 @@ public class MainController {
     ArrayList<BaseStation> stations = new ArrayList<BaseStation>();
     HungarianAlgorithm algorithm;
     HashMap<Integer, Integer> userStations;
-    
-    public MainController(HungarianAlgorithm algorithm){
+
+    public MainController(HungarianAlgorithm algorithm) {
+        stations.add(new BaseStation(-100, -100, 0, 100));
         userStations = new HashMap<Integer, Integer>();
         this.algorithm = algorithm;
     }
@@ -34,32 +34,28 @@ public class MainController {
     public HashMap<Integer, Integer> getUserStations() {
         return userStations;
     }
-     public void createUser(int X, int Y) {
-         users.add(new User(X, Y));
-     }
-     
-      public void createBaseStation(int X, int Y, int Range, int Res) {
-         stations.add(new BaseStation(X, Y, Range, Res));
-     }
-     
-      public void createUsers() {
-         Random r = new Random();  
-        for(int i=0;i<20;i++){
-             users.add(new User(r.nextInt(100), r.nextInt(100)));
-        }
 
+    public void createUser(int X, int Y) {
+        users.add(new User(X, Y));
     }
-      
-      
-    public void createBaseStations() {
-        
-        
+
+    public void createBaseStation(int X, int Y, int Range, int Res) {
+        stations.add(new BaseStation(X, Y, Range, Res));
+    }
+
+    public void createRandomUsers() {
+        Random r = new Random();
+        for (int i = 0; i < 20; i++) {
+            users.add(new User(r.nextInt(100), r.nextInt(100)));
+        }
+    }   
+
+    public void createRandomBaseStations() {
         stations.add(new BaseStation(-100, -100, 0, 100));
-        stations.add(new BaseStation(30, 25, 12, 4));
-        stations.add(new BaseStation(20, 40, 25, 5));
-        stations.add(new BaseStation(43, 60, 17, 8));
-        stations.add(new BaseStation(50, 30, 22, 5));
-        stations.add(new BaseStation(75, 80, 20, 7));
+        Random r = new Random();
+        for (int i = 0; i < 5; i++) {
+            stations.add(new BaseStation(r.nextInt(100), r.nextInt(100), r.nextInt(10)+15, r.nextInt(9)+1));
+        }
     }
 
     public ArrayList<BaseStation> getStations() {
@@ -114,40 +110,40 @@ public class MainController {
             for (int j = 0; j < cols;) {
                 BaseStation bs = stations.get(count);
                 int res = bs.getResources();
-                while (res > 0){
+                while (res > 0) {
                     int val = computeSINR(users.get(i % rows), bs);
                     matrix[i][j] = val;
                     res--;
-                    j++;                    
+                    j++;
                 }
                 count++;
             }
         }
     }
-    
-    public double[][] getMatrix(){
+
+    public double[][] getMatrix() {
         return matrix;
     }
-    
-    private int countColums(){
+
+    private int countColums() {
         ArrayList<BaseStation> list = getStations();
         int count = 0;
-        for(BaseStation bs : list){
+        for (BaseStation bs : list) {
             count += bs.getResources();
         }
         return count;
     }
-    
-    public void start(){
+
+    public void start() {
         algorithm.start(matrix, this);
     }
-    
-    public int getNumberOfStation(int resourceNumber){
+
+    public int getNumberOfStation(int resourceNumber) {
         int result;
-        for(result = 0; result < stations.size() && resourceNumber >= 0; ++result){
+        for (result = 0; result < stations.size() && resourceNumber >= 0; ++result) {
             int res = stations.get(result).getResources();
             resourceNumber -= res;
         }
-        return result-1;
-    }    
+        return result - 1;
+    }
 }
