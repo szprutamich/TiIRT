@@ -128,7 +128,11 @@ public class View extends JFrame {
         
         //TEXTS
         text1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        
+        text2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        text3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        text4.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        text5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        text6.setHorizontalAlignment(javax.swing.JTextField.RIGHT);        
         
         //CHECKBOX
         checkBox.setText("siatka");
