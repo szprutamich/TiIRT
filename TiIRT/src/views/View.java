@@ -14,6 +14,11 @@ import controllers.HungarianAlgorithm;
 import controllers.MainController;
 import controllers.NumericDocument;
 import entities.BaseStation;
+import entities.User;
+import input.InputUsers;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -53,6 +58,7 @@ public class View extends JFrame {
     private JLabel lab7;
     private JLabel lab8;
     private Panel panel;
+    private JButton tempButton;
 
     public View() {
         setLayout(null);
@@ -90,6 +96,7 @@ public class View extends JFrame {
         btnAddStation = new JButton();
         btnRandomUsers = new JButton();
         btnRandomStations = new JButton();
+        
         add(panel);
         add(btnShowConnections	);
         add(lab1);
@@ -113,7 +120,9 @@ public class View extends JFrame {
         add(btnAddStation);
         add(btnRandomUsers);
         add(btnRandomStations);
-
+        
+        
+        
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //LABELS
@@ -200,6 +209,17 @@ public class View extends JFrame {
                 btnRandomStationsActionPerformed(evt);
             }
         });
+        
+        tempButton = new JButton();
+        add(tempButton);
+        tempButton.setBounds(10, 450, 160, 20);
+        tempButton.setText("read Users");
+        tempButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReadUsersActionPerformed(evt);
+            }
+        });
     }
 
     private void btnShowConnectionsActionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,6 +292,39 @@ public class View extends JFrame {
         repaint();
     }
     
+    private void btnReadUsersActionPerformed(java.awt.event.ActionEvent evt) {
+        thread();
+    }
+    
+    private void thread(){
+        Thread t = new Thread(){
+            public void run() {
+                InputUsers input = new InputUsers();
+                ArrayList<ArrayList<User>> users = null;
+                try {
+                    users = input.read();
+                } catch (Exception ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                for(int i = 0; i < users.size(); i++){                    
+                    controller.setUsers(users.get(i));
+                    controller.createMatrix();
+                    controller.getUserStations().clear();
+                    controller.start();
+                    panel.setDrawConnections(true);
+                    repaint();
+                    try {
+                        Thread.currentThread().sleep(2000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        };
+        t.start();
+                
+    }
+    
     private void setLayout(){
         int maxWidth = 160;
         int height = 20;
@@ -299,6 +352,6 @@ public class View extends JFrame {
         lab8.setBounds(margin, 341, 100, height);
         text6.setBounds(120, 341, 50, height-2);
         btnAddStation.setBounds(margin, 370, maxWidth, height);
-        checkBox.setBounds(margin, 400, maxWidth, height);
+        checkBox.setBounds(margin, 400, maxWidth, height);       
     }
 }
