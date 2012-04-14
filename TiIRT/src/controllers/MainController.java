@@ -109,7 +109,7 @@ public class MainController {
             int count = 0;
             for (int j = 0; j < cols;) {
                 BaseStation bs = stations.get(count);
-                int res = bs.getResources();
+                int res = bs.getResourcesOrRequirements();
                 while (res > 0) {
                     int val = computeSINR(users.get(i % rows), bs);
                     matrix[i][j] = val;
@@ -129,7 +129,7 @@ public class MainController {
         ArrayList<BaseStation> list = getStations();
         int count = 0;
         for (BaseStation bs : list) {
-            count += bs.getResources();
+            count += bs.getResourcesOrRequirements();
         }
         return count;
     }
@@ -141,7 +141,7 @@ public class MainController {
     public int getNumberOfStation(int resourceNumber) {
         int result;
         for (result = 0; result < stations.size() && resourceNumber >= 0; ++result) {
-            int res = stations.get(result).getResources();
+            int res = stations.get(result).getResourcesOrRequirements();
             resourceNumber -= res;
         }
         return result - 1;

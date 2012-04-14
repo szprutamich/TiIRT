@@ -26,5 +26,7 @@ public abstract class Object {
 
     public void setY(int y) {
         this.y = y;
-    }    
+    }
+    
+    public abstract int getResourcesOrRequirements();
 }

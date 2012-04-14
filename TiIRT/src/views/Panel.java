@@ -47,8 +47,7 @@ public class Panel extends JPanel {
     private void drawRange(BaseStation b, Color c, Graphics g) {
         g.setColor(c);
         int range = b.getD() * width / side;
-        g.drawOval(b.getX() * width / side - range, b.getY() * height / side - range, range * 2, range * 2);
-        g.drawString(String.valueOf(b.getResources()), b.getX() * width / side, b.getY() * height / side + 20);
+        g.drawOval(b.getX() * width / side - range, b.getY() * height / side - range, range * 2, range * 2);        
     }
 
     private void drawObjects(MainController controller, Graphics g) {
@@ -56,9 +55,11 @@ public class Panel extends JPanel {
         for (Object s : controller.getStations()) {
             drawObject(s, new Color(70, 128, 224), g);
             drawRange((BaseStation) s, new Color(70, 128, 224), g);
+            g.drawString(String.valueOf(s.getResourcesOrRequirements()), s.getX() * width / side, s.getY() * height / side + 20);
         }
         for (Object u : controller.getUsers()) {
             drawObject(u, new Color(0, 0, 0), g);
+            g.drawString(String.valueOf(u.getResourcesOrRequirements()), u.getX() * width / side, u.getY() * height / side + 20);
         }
     }
 

@@ -24,7 +24,7 @@ public class BaseStation extends Object{
         this.resources = resources;
     }
 
-    public int getResources() {
+    public int getResourcesOrRequirements() {
         return resources;
     }
     
