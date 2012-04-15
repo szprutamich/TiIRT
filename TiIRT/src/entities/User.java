@@ -11,6 +11,7 @@ package entities;
 public class User extends Object{
     
     int requirements;
+    int assigned;
     
     public User(){
         
@@ -20,12 +21,14 @@ public class User extends Object{
         this.x = x;
         this.y = y;
         this.requirements = 1;
+        this.assigned = 0;
     }
     
     public User(int x, int y, int requirements){
         this.x = x;
         this.y = y;
         this.requirements = requirements;
+        this.assigned = 0;
     }
     
     @Override
@@ -55,5 +58,13 @@ public class User extends Object{
     @Override
     public int getResourcesOrRequirements() {
         return requirements;
+    }
+    
+    public void setAssigned(int assigned) {
+        this.assigned = assigned;
+    }
+    
+    public int getAssigned() {
+        return assigned;
     }
 }

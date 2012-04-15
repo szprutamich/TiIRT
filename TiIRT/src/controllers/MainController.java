@@ -46,7 +46,7 @@ public class MainController {
     public void createRandomUsers() {
         Random r = new Random();
         for (int i = 0; i < 20; i++) {
-            users.add(new User(r.nextInt(100), r.nextInt(100)));
+            users.add(new User(r.nextInt(100), r.nextInt(100), r.nextInt(3)+1));
         }
     }   
 
@@ -54,7 +54,7 @@ public class MainController {
         stations.add(new BaseStation(-100, -100, 0, 100));
         Random r = new Random();
         for (int i = 0; i < 5; i++) {
-            stations.add(new BaseStation(r.nextInt(100), r.nextInt(100), r.nextInt(10)+15, r.nextInt(9)+1));
+            stations.add(new BaseStation(r.nextInt(100), r.nextInt(100), r.nextInt(10)+15, r.nextInt(12)+1));
         }
     }
 
@@ -102,22 +102,33 @@ public class MainController {
     }
 
     public void createMatrix() {
-        int rows = users.size();
+        int rows = countRows();
         int cols = countColums();
         matrix = new double[rows][cols];
+        if (rows == 0 || cols == 0)
+            return;
+        int countUser = 0;
+        User u = users.get(countUser);
+        int resUser = u.getResourcesOrRequirements();
         for (int i = 0; i < rows; i++) {
             int count = 0;
+            if (resUser == 0) {
+                countUser++;
+                u = users.get(countUser);
+                resUser = u.getResourcesOrRequirements();
+            }
             for (int j = 0; j < cols;) {
                 BaseStation bs = stations.get(count);
                 int res = bs.getResourcesOrRequirements();
                 while (res > 0) {
-                    int val = computeSINR(users.get(i % rows), bs);
+                    int val = computeSINR(users.get(countUser), bs);
                     matrix[i][j] = val;
                     res--;
                     j++;
                 }
                 count++;
             }
+            resUser--;
         }
     }
 
@@ -134,6 +145,15 @@ public class MainController {
         return count;
     }
 
+    private int countRows() {
+        ArrayList<User> list = getUsers();
+        int count = 0;
+        for (User u : list) {
+            count += u.getResourcesOrRequirements();
+        }
+        return count;
+    }
+
     public void start() {
         algorithm.start(matrix, this);
     }
@@ -142,6 +162,15 @@ public class MainController {
         int result;
         for (result = 0; result < stations.size() && resourceNumber >= 0; ++result) {
             int res = stations.get(result).getResourcesOrRequirements();
+            resourceNumber -= res;
+        }
+        return result - 1;
+    }
+
+    public int getNumberOfUser(int resourceNumber) {
+        int result;
+        for (result = 0; result < users.size() && resourceNumber >= 0; ++result) {
+            int res = users.get(result).getResourcesOrRequirements();
             resourceNumber -= res;
         }
         return result - 1;

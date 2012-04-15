@@ -375,11 +375,12 @@ public class HungarianAlgorithm {
 
         for (int i = 0; i < assignment.length; i++) {
             if (matrix[assignment[i][0]][assignment[i][1]] > 0) {
-                int u = assignment[i][0];
+                int u = controller.getNumberOfUser(assignment[i][0]);
                 int bs = controller.getNumberOfStation(assignment[i][1]);
                 controller.getUserStations().put(u, bs);
-                System.out.printf("user %d connected to %d station using %d resource\n", u, bs,
-                        (assignment[i][1]));
+                controller.getUsers().get(u).setAssigned(controller.getUsers().get(u).getAssigned()+1);
+                System.out.printf("user %d resource %d connected to %d station using %d resource\n", u, 
+                        (assignment[i][0]), bs, (assignment[i][1]));
             }
         }
     }
