@@ -59,7 +59,12 @@ public class Panel extends JPanel {
         }
         for (Object u : controller.getUsers()) {
             drawObject(u, new Color(0, 0, 0), g);
-            g.drawString(String.valueOf(u.getResourcesOrRequirements()), u.getX() * width / side, u.getY() * height / side + 20);
+            int assigned = ((User)u).getAssigned();
+            if(assigned > 0)
+                g.drawString(assigned+"/"+String.valueOf(u.getResourcesOrRequirements()), u.getX() * width / side - 5, u.getY() * height / side + 20);
+            else{
+                g.drawString(String.valueOf(u.getResourcesOrRequirements()), u.getX() * width / side, u.getY() * height / side + 20);
+            }
         }
     }
 

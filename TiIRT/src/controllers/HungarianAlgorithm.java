@@ -1,5 +1,7 @@
 package controllers;
 
+import entities.User;
+
 public class HungarianAlgorithm {
 
     public static double findLargest //Finds the largest element in a positive array.
@@ -372,7 +374,10 @@ public class HungarianAlgorithm {
 
         int[][] assignment = new int[matrix.length][2];
         assignment = hgAlgorithm(matrix, sumType);
-
+        //clear assigned resources
+        for(User u : controller.getUsers()){
+            u.setAssigned(0);
+        }
         for (int i = 0; i < assignment.length; i++) {
             if (matrix[assignment[i][0]][assignment[i][1]] > 0) {
                 int u = controller.getNumberOfUser(assignment[i][0]);
