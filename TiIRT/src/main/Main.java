@@ -19,7 +19,12 @@ public class Main {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (Exception ex) {
-            System.err.println("Windows failure");
+            System.err.println("Windows L&F failure");
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+            } catch (Exception ex1) {
+                System.err.println("GTK+ L&F failure");
+            }
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override

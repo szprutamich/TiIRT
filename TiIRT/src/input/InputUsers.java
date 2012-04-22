@@ -37,7 +37,7 @@ public class InputUsers {
                 StringTokenizer token = new StringTokenizer(line);
                 String type = token.nextToken();
                 if(type.startsWith("USERS:")){
-                    usersCount = Integer.parseInt(token.nextToken());                
+                    usersCount = Integer.parseInt(token.nextToken());
                 }
                 else if(type.startsWith("ITERATIONS:")){
                     iterationsCount = Integer.parseInt(token.nextToken());

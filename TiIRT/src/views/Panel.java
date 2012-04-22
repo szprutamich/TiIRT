@@ -25,6 +25,7 @@ public class Panel extends JPanel {
     private MainController controller;
     private boolean drawConnections = false;
     private boolean grid = false;
+    private int inRangeCount = 0, assignedCount = 0;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -33,9 +34,10 @@ public class Panel extends JPanel {
         g.drawRect(0, 0, width, height);
         if (controller != null) {
             drawObjects(controller, g);
-        }
-        if (drawConnections) {
-            drawConnections(controller, g);
+            if (drawConnections) {
+                drawConnections(controller, g);
+            }
+            drawStatistics(g);
         }
     }
 
@@ -51,6 +53,8 @@ public class Panel extends JPanel {
     }
 
     private void drawObjects(MainController controller, Graphics g) {
+        inRangeCount = 0;
+        assignedCount = 0;
         drawGrid(g, grid);
         for (Object s : controller.getStations()) {
             drawObject(s, new Color(70, 128, 224), g);
@@ -60,12 +64,30 @@ public class Panel extends JPanel {
         for (Object u : controller.getUsers()) {
             drawObject(u, new Color(0, 0, 0), g);
             int assigned = ((User)u).getAssigned();
-            if(assigned > 0)
+            if(assigned > 0) {
                 g.drawString(assigned+"/"+String.valueOf(u.getResourcesOrRequirements()), u.getX() * width / side - 5, u.getY() * height / side + 20);
+                assignedCount++;
+                inRangeCount++;
+            }
             else{
                 g.drawString(String.valueOf(u.getResourcesOrRequirements()), u.getX() * width / side, u.getY() * height / side + 20);
+                if (controller.isUserinRange(u))
+                    inRangeCount++;
             }
         }
+        if (controller.getUsers().size() > 0) {
+            inRangeCount *= 100;
+            inRangeCount /= controller.getUsers().size();
+            assignedCount *= 100;
+            assignedCount /= controller.getUsers().size();
+        }
+    }
+
+    private void drawStatistics(Graphics g) {
+        g.setColor(new Color(160, 160, 160, 200));
+        g.fillRect(0, height - 20, width, height);
+        g.setColor(new Color(0, 0, 0));
+        g.drawString("W zasięgu: " + inRangeCount + "%, połączonych: " + assignedCount + "%.", 5, height - 5);
     }
 
     private void drawGrid(Graphics g, boolean draw) {

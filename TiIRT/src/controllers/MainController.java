@@ -1,6 +1,7 @@
 package controllers;
 
 import entities.BaseStation;
+import entities.Object;
 import entities.User;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -174,5 +175,13 @@ public class MainController {
             resourceNumber -= res;
         }
         return result - 1;
+    }
+
+    public boolean isUserinRange(Object u) {
+        for (BaseStation s : stations)
+            if (Math.sqrt((s.getX() - u.getX()) * (s.getX() - u.getX()) 
+                    + (s.getY() - u.getY()) * (s.getY() - u.getY())) <= s.getD())
+                return true;
+        return false;
     }
 }
