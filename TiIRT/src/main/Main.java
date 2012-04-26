@@ -36,5 +36,12 @@ public class Main {
                 }
             }
         });
+        for(int i = 1; i < 301; i++){
+            System.out.println("ITERATION: "+i);
+            for(int j = 1; j < 50; j++){
+                System.out.println(j+" "+(int)Math.ceil(5));
+            }
+        }
+            
     }    
 }

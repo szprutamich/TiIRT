@@ -15,7 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author maszter
  */
 public class InputUsers {
-    public static final String FILE_PATH = "E:/tiirt/TiIRT";
+    public static final String FILE_PATH = "/TiIRT/TiIRT";
     
     public ArrayList<ArrayList<User>> read(JFrame frame) throws Exception{
         JFileChooser chooser = new JFileChooser(FILE_PATH);

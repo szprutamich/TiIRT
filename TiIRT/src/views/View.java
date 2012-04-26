@@ -15,6 +15,8 @@ import controllers.MainController;
 import controllers.NumericDocument;
 import entities.BaseStation;
 import entities.User;
+import input.InputRequirements;
+import input.InputStations;
 import input.InputUsers;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -33,17 +35,16 @@ import javax.swing.WindowConstants;
 public class View extends JFrame {
 
     MainController controller = new MainController(new HungarianAlgorithm());
-    
+    ArrayList<ArrayList<User>> users = null;
     boolean interrupted = false;
-    
     //GUI ELEMENTS
     private JButton btnAddStation;
     private JButton btnAddUser;
-    private JButton btnRandomStations;
-    private JButton btnRandomUsers;
+    private JButton btnReadRequirements;
+    private JButton btnReadStations;
     private JButton btnRemoveStations;
     private JButton btnRemoveUsers;
-    private JButton btnShowConnections;
+    private JButton btnStartSimulation;
     private JCheckBox checkBox;
     private JTextField text1;
     private JTextField text2;
@@ -59,7 +60,6 @@ public class View extends JFrame {
     private JLabel lab6;
     private JLabel lab7;
     private JLabel lab8;
-    private JLabel lab9;
     private Panel panel;
     private JButton btnReadUsers;
     private JButton btnStop;
@@ -78,7 +78,7 @@ public class View extends JFrame {
 
     private void initComponents() {
         panel = new Panel();
-        btnShowConnections = new JButton();
+        btnStartSimulation = new JButton();
         lab1 = new JLabel();
         lab2 = new JLabel();
         text1 = new JTextField();
@@ -98,14 +98,13 @@ public class View extends JFrame {
         btnRemoveUsers = new JButton();
         btnRemoveStations = new JButton();
         btnAddStation = new JButton();
-        btnRandomUsers = new JButton();
-        btnRandomStations = new JButton();
-        lab9 = new JLabel();
+        btnReadStations = new JButton();
+        btnReadRequirements = new JButton();
         btnReadUsers = new JButton();
         btnStop = new JButton();
-        
+
         add(panel);
-        add(btnShowConnections	);
+        add(btnStartSimulation);
         add(lab1);
         add(lab2);
         add(text1);
@@ -125,12 +124,11 @@ public class View extends JFrame {
         add(btnRemoveUsers);
         add(btnRemoveStations);
         add(btnAddStation);
-        add(btnRandomUsers);
-        add(btnRandomStations);
-        add(lab9);
+        add(btnReadStations);
+        add(btnReadRequirements);
         add(btnReadUsers);
         add(btnStop);
-        
+
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //LABELS
@@ -142,34 +140,35 @@ public class View extends JFrame {
         lab6.setText("Y:");
         lab7.setText("Liczba zasobów:");
         lab8.setText("Zasięg:");
-        lab9.setText("Symulacja:");
-        
+
         //TEXTS
         text1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         text2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         text3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         text4.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         text5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        text6.setHorizontalAlignment(javax.swing.JTextField.RIGHT);        
-        
+        text6.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         //CHECKBOX
         checkBox.setText("siatka");
         checkBox.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkBoxActionPerformed(evt);
             }
         });
-        
+
         //BUTTONS
-        btnShowConnections.setText("Pokaż połączenia");
-        btnShowConnections.addActionListener(new java.awt.event.ActionListener() {
+        btnStartSimulation.setText("Rozpocznij symulację");
+        btnStartSimulation.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnShowConnectionsActionPerformed(evt);
             }
         });
-        
+
         btnAddUser.setText("Dodaj");
         btnAddUser.addActionListener(new java.awt.event.ActionListener() {
 
@@ -177,10 +176,11 @@ public class View extends JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddUserActionPerformed(evt);
             }
-        });       
+        });
 
         btnRemoveUsers.setText("Usuń użytkowników");
         btnRemoveUsers.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveUsersActionPerformed(evt);
@@ -189,6 +189,7 @@ public class View extends JFrame {
 
         btnRemoveStations.setText("Usuń stacje bazowe");
         btnRemoveStations.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveStationsActionPerformed(evt);
@@ -197,38 +198,47 @@ public class View extends JFrame {
 
         btnAddStation.setText("Dodaj");
         btnAddStation.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddStationActionPerformed(evt);
             }
         });
 
-        btnRandomUsers.setText("Losowi użytkownicy (20)");
-        btnRandomUsers.addActionListener(new java.awt.event.ActionListener() {
+        btnReadStations.setText("Wczytaj stacje bazowe");
+        btnReadStations.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRandomUsersActionPerformed(evt);
+                try {
+                    btnReadStationsActionPerformed(evt);
+                } catch (Exception ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
-        btnRandomStations.setText("Losowe stacje bazowe (5)");
-        btnRandomStations.addActionListener(new java.awt.event.ActionListener() {
+        btnReadRequirements.setText("Wczytaj wymagania");
+        btnReadRequirements.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRandomStationsActionPerformed(evt);
+                btnReadRequirementsActionPerformed(evt);
             }
-        });       
-        
-        btnReadUsers.setText("Wczytaj użytkowników");
+        });
+
+        btnReadUsers.setText("Wczytaj model");
         btnReadUsers.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReadUsersActionPerformed(evt);
             }
         });
-        
+
         btnStop.setText("Przerwij symulację");
         btnStop.addActionListener(new java.awt.event.ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStopActionPerformed(evt);
@@ -237,16 +247,11 @@ public class View extends JFrame {
     }
 
     private void btnShowConnectionsActionPerformed(java.awt.event.ActionEvent evt) {
-        if (!controller.getUsers().isEmpty()) {
-            controller.createMatrix();
-            controller.start();
-            panel.setDrawConnections(true);
-            panel.repaint();
-        }
+        thread();
     }
 
     private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {
-        if(!text1.getText().equals("") && !text2.getText().equals("")){
+        if (!text1.getText().equals("") && !text2.getText().equals("")) {
             controller.createUser(Integer.parseInt(text1.getText()), Integer.parseInt(text2.getText()));
             text1.setText("");
             text2.setText("");
@@ -273,7 +278,7 @@ public class View extends JFrame {
     }
 
     private void btnAddStationActionPerformed(java.awt.event.ActionEvent evt) {
-        if(!text3.getText().equals("") && !text4.getText().equals("") && !text5.getText().equals("") && !text6.getText().equals("")){
+        if (!text3.getText().equals("") && !text4.getText().equals("") && !text5.getText().equals("") && !text6.getText().equals("")) {
             controller.createBaseStation(Integer.parseInt(text3.getText()), Integer.parseInt(text4.getText()), Integer.parseInt(text6.getText()), Integer.parseInt(text5.getText()));
             text3.setText("");
             text4.setText("");
@@ -283,10 +288,11 @@ public class View extends JFrame {
         }
     }
 
-    private void btnRandomUsersActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnReadStationsActionPerformed(java.awt.event.ActionEvent evt) throws Exception {
         controller.getUserStations().clear();
-        controller.getUsers().clear();
-        controller.createRandomUsers();
+        controller.getStations().clear();
+        InputStations input = new InputStations();
+        controller.setStations(input.read(this));
         repaint();
     }
 
@@ -299,36 +305,36 @@ public class View extends JFrame {
         text6.setDocument(new NumericDocument(2));
     }
 
-    private void btnRandomStationsActionPerformed(java.awt.event.ActionEvent evt) {
-        controller.getUserStations().clear();
-        controller.getStations().clear();
-        controller.createRandomBaseStations();
+    private void btnReadRequirementsActionPerformed(java.awt.event.ActionEvent evt) {
+        InputRequirements input = new InputRequirements();
+        try {
+            input.read(users, this);
+        } catch (Exception ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
         repaint();
     }
-    
+
     private void btnReadUsersActionPerformed(java.awt.event.ActionEvent evt) {
-        thread();
+        try {
+            InputUsers input = new InputUsers();
+            users = input.read(this);
+        } catch (Exception ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {
         interrupted = true;
     }
-    
-    private void thread(){
+
+    private void thread() {
         interrupted = false;
-        final JFrame frame = this;
-        Thread t = new Thread(){
+        Thread t = new Thread() {
             @Override
             public void run() {
-                InputUsers input = new InputUsers();
-                ArrayList<ArrayList<User>> users = null;
-                try {
-                    users = input.read(frame);
-                } catch (Exception ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                if(users != null){
-                    for(int i = 0; i < users.size() && !interrupted; i++){                    
+                if (users != null) {
+                    for (int i = 0; i < users.size() && !interrupted; i++) {
                         controller.setUsers(users.get(i));
                         controller.createMatrix();
                         controller.getUserStations().clear();
@@ -336,7 +342,7 @@ public class View extends JFrame {
                         panel.setDrawConnections(true);
                         repaint();
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(100);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -345,39 +351,37 @@ public class View extends JFrame {
             }
         };
         t.start();
-                
     }
-    
-    private void setLayout(){
+
+    private void setLayout() {
         int maxWidth = 160;
         int height = 20;
         int margin = 10;
-        
-        panel.setBounds(margin+maxWidth+margin, margin, 501, 501);
-        btnRandomUsers.setBounds(margin, margin, maxWidth, height);
-        btnRandomStations.setBounds(margin, 40, maxWidth, height);
-        btnShowConnections.setBounds(margin, 70, maxWidth, height);
-        btnRemoveUsers.setBounds(margin, 100, maxWidth, height);
-        btnRemoveStations.setBounds(margin, 130, maxWidth, height);
-        lab1.setBounds(margin, 160, maxWidth, height);
-        lab2.setBounds(margin, 190, 10, height);
-        text1.setBounds(30, 191, 50, height-2);
-        lab3.setBounds(100, 190, 10, height);
-        text2.setBounds(120, 191, 50, height-2);
-        btnAddUser.setBounds(margin, 220, maxWidth, height);        
-        lab4.setBounds(margin, 250, maxWidth, height);
-        lab5.setBounds(margin, 280, 10, height);
-        text3.setBounds(30, 281, 50, height-2);
-        lab6.setBounds(100, 280, 10, height);
-        text4.setBounds(120, 281, 50, height-2);        
-        lab7.setBounds(margin, 310, 100, height);
-        text5.setBounds(120, 311, 50, height-2);        
-        lab8.setBounds(margin, 341, 100, height);
-        text6.setBounds(120, 341, 50, height-2);
-        btnAddStation.setBounds(margin, 370, maxWidth, height);
-        checkBox.setBounds(margin, 400, maxWidth, height);
-        lab9.setBounds(10, 430, maxWidth, height);
-        btnReadUsers.setBounds(10, 460, 160, 20);
-        btnStop.setBounds(10, 490, 160, 20);
+
+        panel.setBounds(margin + maxWidth + margin, margin, 501, 501);
+        btnReadStations.setBounds(margin, margin, maxWidth, height);
+        btnReadUsers.setBounds(margin, 40, maxWidth, height);
+        btnReadRequirements.setBounds(margin, 70, maxWidth, height);
+        btnStartSimulation.setBounds(margin, 100, maxWidth, height);
+        btnStop.setBounds(margin, 130, maxWidth, height);
+        btnRemoveUsers.setBounds(margin, 160, maxWidth, height);
+        btnRemoveStations.setBounds(margin, 190, maxWidth, height);
+        lab1.setBounds(margin, 220, maxWidth, height);
+        lab2.setBounds(margin, 250, 10, height);
+        text1.setBounds(30, 251, 50, height - 2);
+        lab3.setBounds(100, 250, 10, height);
+        text2.setBounds(120, 251, 50, height - 2);
+        btnAddUser.setBounds(margin, 280, maxWidth, height);
+        lab4.setBounds(margin, 310, maxWidth, height);
+        lab5.setBounds(margin, 340, 10, height);
+        text3.setBounds(30, 341, 50, height - 2);
+        lab6.setBounds(100, 340, 10, height);
+        text4.setBounds(120, 341, 50, height - 2);
+        lab7.setBounds(margin, 370, 100, height);
+        text5.setBounds(120, 371, 50, height - 2);
+        lab8.setBounds(margin, 400, 100, height);
+        text6.setBounds(120, 401, 50, height - 2);
+        btnAddStation.setBounds(margin, 430, maxWidth, height);
+        checkBox.setBounds(margin, 460, maxWidth, height);
     }
 }

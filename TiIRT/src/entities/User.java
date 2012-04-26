@@ -60,6 +60,10 @@ public class User extends Object{
         return requirements;
     }
     
+    public void setResources(int requirements){
+        this.requirements = requirements;
+    }
+    
     public void setAssigned(int assigned) {
         this.assigned = assigned;
     }

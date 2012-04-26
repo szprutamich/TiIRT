@@ -44,15 +44,8 @@ public class MainController {
         stations.add(new BaseStation(X, Y, Range, Res));
     }
 
-    public void createRandomUsers() {
-        Random r = new Random();
-        for (int i = 0; i < 20; i++) {
-            users.add(new User(r.nextInt(100), r.nextInt(100), r.nextInt(3)+1));
-        }
-    }   
-
     public void createRandomBaseStations() {
-        stations.add(new BaseStation(-100, -100, 0, 100));
+        
         Random r = new Random();
         for (int i = 0; i < 5; i++) {
             stations.add(new BaseStation(r.nextInt(100), r.nextInt(100), r.nextInt(10)+15, r.nextInt(12)+1));
