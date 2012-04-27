@@ -25,7 +25,7 @@ public class Panel extends JPanel {
     private MainController controller;
     private boolean drawConnections = false;
     private boolean grid = false;
-    private int inRangeCount = 0, assignedCount = 0;
+    private int inRangeCount = 0, assignedCount = 0, partiallyAssigned = 0;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -55,6 +55,7 @@ public class Panel extends JPanel {
     private void drawObjects(MainController controller, Graphics g) {
         inRangeCount = 0;
         assignedCount = 0;
+        partiallyAssigned = 0;
         drawGrid(g, grid);
         for (Object s : controller.getStations()) {
             drawObject(s, new Color(70, 128, 224), g);
@@ -67,6 +68,8 @@ public class Panel extends JPanel {
             if(assigned > 0) {
                 g.drawString(assigned+"/"+String.valueOf(u.getResourcesOrRequirements()), u.getX() * width / side - 5, u.getY() * height / side + 20);
                 assignedCount++;
+                if (assigned != u.getResourcesOrRequirements())
+                    partiallyAssigned++;
                 inRangeCount++;
             }
             else{
@@ -78,6 +81,8 @@ public class Panel extends JPanel {
         if (controller.getUsers().size() > 0) {
             inRangeCount *= 100;
             inRangeCount /= controller.getUsers().size();
+            partiallyAssigned *= 100;
+            partiallyAssigned /= controller.getUsers().size();
             assignedCount *= 100;
             assignedCount /= controller.getUsers().size();
         }
@@ -87,7 +92,8 @@ public class Panel extends JPanel {
         g.setColor(new Color(160, 160, 160, 200));
         g.fillRect(0, height - 20, width, height);
         g.setColor(new Color(0, 0, 0));
-        g.drawString("W zasięgu: " + inRangeCount + "%, połączonych: " + assignedCount + "%.", 5, height - 5);
+        g.drawString("W zasięgu: " + inRangeCount + "%, połączonych: " + assignedCount + "% (pełny: "
+                +(assignedCount-partiallyAssigned)+"%, częściowo: "+partiallyAssigned+"%)", 5, height - 5);
     }
 
     private void drawGrid(Graphics g, boolean draw) {
@@ -114,6 +120,10 @@ public class Panel extends JPanel {
 
     public void setDrawConnections(boolean b) {
         drawConnections = b;
+    }
+    
+    public String getState() {
+        return inRangeCount + "\t" + assignedCount + "\t" + partiallyAssigned + "\n";
     }
 
     private void drawConnections(MainController controller, Graphics g) {

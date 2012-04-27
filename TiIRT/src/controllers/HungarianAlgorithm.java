@@ -363,14 +363,16 @@ public class HungarianAlgorithm {
     public void start(double[][] matrix, MainController controller) {
         String sumType = "max";
 
-        System.out.println("The matrix is:");
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                System.out.printf("%4.0f", matrix[i][j]);
+        if (MainController.DEBUG) {
+            System.out.println("The matrix is:");
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix[i].length; j++) {
+                    System.out.printf("%4.0f", matrix[i][j]);
+                }
+                System.out.println();
             }
             System.out.println();
         }
-        System.out.println();
 
         int[][] assignment = new int[matrix.length][2];
         assignment = hgAlgorithm(matrix, sumType);
@@ -384,7 +386,8 @@ public class HungarianAlgorithm {
                 int bs = controller.getNumberOfStation(assignment[i][1]);
                 controller.getUserStations().put(u, bs);
                 controller.getUsers().get(u).setAssigned(controller.getUsers().get(u).getAssigned()+1);
-                System.out.printf("user %d resource %d connected to %d station using %d resource\n", u, 
+                if (MainController.DEBUG)
+                    System.out.printf("user %d resource %d connected to %d station using %d resource\n", u, 
                         (assignment[i][0]), bs, (assignment[i][1]));
             }
         }

@@ -18,15 +18,14 @@ import entities.User;
 import input.InputRequirements;
 import input.InputStations;
 import input.InputUsers;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 /**
  *
@@ -334,6 +333,7 @@ public class View extends JFrame {
             @Override
             public void run() {
                 if (users != null) {
+                    StringBuilder sb = new StringBuilder("InRange\tAssigned\tPartially\n");
                     for (int i = 0; i < users.size() && !interrupted; i++) {
                         controller.setUsers(users.get(i));
                         controller.createMatrix();
@@ -341,12 +341,14 @@ public class View extends JFrame {
                         controller.start();
                         panel.setDrawConnections(true);
                         repaint();
+                        sb.append(panel.getState());
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    saveResults(sb.toString());
                 }
             }
         };
@@ -383,5 +385,23 @@ public class View extends JFrame {
         text6.setBounds(120, 401, 50, height - 2);
         btnAddStation.setBounds(margin, 430, maxWidth, height);
         checkBox.setBounds(margin, 460, maxWidth, height);
+    }
+    
+    private void saveResults(String results) {
+        JFileChooser chooser = new JFileChooser(InputStations.FILE_PATH);
+        int returnVal = chooser.showSaveDialog(panel);
+        File file;
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            file = chooser.getSelectedFile();
+            try {
+                BufferedWriter out = new BufferedWriter(new FileWriter(file));
+                out.write(results);
+                out.close();
+            } 
+            catch (IOException e) 
+            { 
+                JOptionPane.showMessageDialog(panel, e.getMessage(), "Problem przy zapisie wyników", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }

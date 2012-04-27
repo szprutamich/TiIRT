@@ -25,6 +25,7 @@ public class MainController {
     ArrayList<BaseStation> stations = new ArrayList<BaseStation>();
     HungarianAlgorithm algorithm;
     HashMap<Integer, Integer> userStations;
+    public static boolean DEBUG = false;
 
     public MainController(HungarianAlgorithm algorithm) {
         stations.add(new BaseStation(-100, -100, 0, 100));
