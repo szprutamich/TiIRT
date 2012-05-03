@@ -40,21 +40,22 @@ public class InputRequirements {
                     String type = token.nextToken();
                     if(type.startsWith("USERS:")){
                         int usersCount = Integer.parseInt(token.nextToken());
-                        if(usersCount != usersInTime.get(0).size())
-                            throw new Exception("Invalid users size");
+//                        if(usersCount != usersInTime.get(0).size())
+//                            throw new Exception("Invalid users size");
                     }
                     else if(type.startsWith("ITERATIONS:")){
                         int iterationsCount = Integer.parseInt(token.nextToken());
-                        if(iterationsCount != usersInTime.size())
-                            throw new Exception("Invalid iterations count");
+//                        if(iterationsCount != usersInTime.size())
+//                            throw new Exception("Invalid iterations count");
                     }
                     else if(type.startsWith("ITERATION:")){
                         nr = Integer.parseInt(token.nextToken());
                     }
-                    else{
+                    else {
                         int i = Integer.parseInt(type);
                         int r = Integer.parseInt(token.nextToken());
-                        usersInTime.get(nr-1).get(i-1).setResources(r);
+                        if((i-1)<InputUsers.MAX_USERS)
+                            usersInTime.get(nr-1).get(i-1).setResources(r+1);
                     }
                 }           
             }

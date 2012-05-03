@@ -16,6 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class InputUsers {
     public static final String FILE_PATH = "/TiIRT/TiIRT";
+    public static final int MAX_USERS = 80;
     
     public ArrayList<ArrayList<User>> read(JFrame frame) throws Exception{
         JFileChooser chooser = new JFileChooser(FILE_PATH);
@@ -52,7 +53,8 @@ public class InputUsers {
                 else{
                     int x = Integer.parseInt(token.nextToken());
                     int y = Integer.parseInt(token.nextToken());
-                    usersInTime.get(nr-1).add(new User(x*2, y*2));
+                    if(usersInTime.get(nr-1).size()<MAX_USERS)
+                        usersInTime.get(nr-1).add(new User(x*2, y*2));
                 }
             }           
         }

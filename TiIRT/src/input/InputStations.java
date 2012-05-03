@@ -27,7 +27,7 @@ public class InputStations {
         ArrayList<BaseStation> stations = new ArrayList<BaseStation>();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                stations.add(new BaseStation(-100, -100, 0, 200));
+                stations.add(new BaseStation(-100, -100, 0, 100));
                 path = chooser.getSelectedFile().getPath();
                 File file = new File(path);
                 Scanner scan = new Scanner(file);
