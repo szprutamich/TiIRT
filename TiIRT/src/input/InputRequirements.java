@@ -1,8 +1,6 @@
 package input;
 
 import entities.User;
-import java.awt.Dialog;
-import java.awt.TextField;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

@@ -20,7 +20,7 @@ public class User extends Object{
     public User(int x, int y){
         this.x = x;
         this.y = y;
-        this.requirements = (int)(Math.random() * 3 + 1);
+        this.requirements = 4;
         this.assigned = 0;
     }
     
